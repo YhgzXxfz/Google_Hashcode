@@ -190,7 +190,6 @@ int main(int argc, const char * argv[]) {
     LoadData();
     
     output.open(OutputName);
-
     int totalTime = 0, time = 0;
     
     for (auto & order : orders)
@@ -213,25 +212,25 @@ int main(int argc, const char * argv[]) {
     cout << totalTime << endl;
     
     sort(orders.begin(), orders.end(), compT);
-    int lines = 0;
+    int lines = 0, drone = 0;
     totalTime = 0;
     for (auto & order : orders)
     {
-        int drone = 0;
+        int currDrone = drone;
         for (auto it = order.demands.begin(); it != order.demands.end(); ++it)
         {
             if (totalTime >= T) break;
             Load(drone, 0, it->first, it->second);
-            totalTime++; drone++; lines++;
+            totalTime++; drone = (drone+1)%totalDrone; lines++;
         }
         
-        drone = 0;
+        drone = currDrone;
         for (auto it = order.demands.begin(); it != order.demands.end(); ++it)
         {
             if (totalTime >= T) break;
             Deliver(drone, order.id, it->first, it->second);
             int dis = distance(warehouses[0].position, order.position);
-            totalTime += dis; drone++; lines++;
+            totalTime += dis; drone = (drone+1)%totalDrone; lines++;
         }
     }
 
